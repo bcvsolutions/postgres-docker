@@ -1,0 +1,26 @@
+# Example compose file for Postgres
+
+version: '3.2'
+
+services:
+  database:
+    image: bcv-postgres:12-r0
+    container_name: database
+    ports:
+      - 5432:5432
+    hostname: database
+    environment:
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres.pwfile
+      - DB_USER=myuser
+      - DB_USER_PASSWORD_FILE=/run/secrets/dbuser.pwfile
+      - DB_NAME=mydatabase
+      - DB_COLLATION=cs_CZ.utf8
+    volumes:
+      - type: bind
+        source: ./postgres.pwfile
+        target: /run/secrets/postgres.pwfile
+        read_only: true
+      - type: bind
+        source: ./dbuser.pwfile
+        target: /run/secrets/dbuser.pwfile
+        read_only: true
