@@ -4,7 +4,7 @@ version: '3.2'
 
 services:
   database:
-    image: bcv-postgres:12-r0
+    image: bcv-postgres:12-r1
     container_name: database
     ports:
       - 5432:5432
@@ -47,4 +47,8 @@ services:
 #      - type: bind
 #        source: ./data
 #        target: /var/lib/postgresql/data
+#        read_only: false
+#      - type : bind
+#        source: ./backup
+#        target: /var/lib/postgresql/backup
 #        read_only: false

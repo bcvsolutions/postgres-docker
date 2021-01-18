@@ -64,6 +64,10 @@ Presently, image supports those collations.
 - cs_CZ.utf8
 - de_DE.utf8
 
+### Backups
+Container can make a persistent backup of the database, using `pg_dump` with highest compression internally.
+To make a backup of the database, simly run `docker exec -it database /var/lib/postgresql/backup-db.sh` from outside the container.
+For details, see [dropin/backup-db.sh](dropin/backup-db.sh).
 
 ## Mounted files and volumes
 - Mandatory
@@ -88,5 +92,16 @@ Presently, image supports those collations.
         - type: bind
           source: ./somedir
           target: /var/lib/postgresql/data
+          read_only: false
+      ```
+  - Directory which will hold database backups.
+    - There are your backups in the directory.
+    - Without this directory mounted, container will not store your database backups persistently.
+    - Example
+      ```yaml
+      volumes:
+        - type: bind
+          source: ./somedir
+          target: /var/lib/postgresql/backup
           read_only: false
       ```
