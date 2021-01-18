@@ -12,7 +12,7 @@ services:
 # example database sizing according to pgtune
 #    command:
 #      # 3GB memory, 2xCPU, 200 connections, SSD, webapp
-#      - '-cmax_connections=100'
+#      - '-cmax_connections=200'
 #      - '-cshared_buffers=768MB'
 #      - '-ceffective_cache_size=2304MB'
 #      - '-cmaintenance_work_mem=192MB'
