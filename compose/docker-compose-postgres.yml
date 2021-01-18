@@ -4,11 +4,30 @@ version: '3.2'
 
 services:
   database:
-    image: bcv-postgres:12-r0
+    image: bcv-postgres:12-r1
     container_name: database
     ports:
       - 5432:5432
     hostname: database
+# example database sizing according to pgtune
+#    command:
+#      # 3GB memory, 2xCPU, 200 connections, SSD, webapp
+#      - '-cmax_connections=200'
+#      - '-cshared_buffers=768MB'
+#      - '-ceffective_cache_size=2304MB'
+#      - '-cmaintenance_work_mem=192MB'
+#      - '-ccheckpoint_completion_target=0.7'
+#      - '-cwal_buffers=16MB'
+#      - '-cdefault_statistics_target=100'
+#      - '-crandom_page_cost=1.1'
+#      - '-ceffective_io_concurrency=200'
+#      - '-cwork_mem=3932kB'
+#      - '-cmin_wal_size=1GB'
+#      - '-cmax_wal_size=4GB'
+#      - '-cmax_worker_processes=2'
+#      - '-cmax_parallel_workers_per_gather=1'
+#      - '-cmax_parallel_workers=2'
+#      - '-cmax_parallel_maintenance_workers=1'
     environment:
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgres.pwfile
       - DB_USER=myuser
@@ -24,3 +43,12 @@ services:
         source: ./dbuser.pwfile
         target: /run/secrets/dbuser.pwfile
         read_only: true
+# to persist database data
+#      - type: bind
+#        source: ./data
+#        target: /var/lib/postgresql/data
+#        read_only: false
+#      - type : bind
+#        source: ./backup
+#        target: /var/lib/postgresql/backup
+#        read_only: false
