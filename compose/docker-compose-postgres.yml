@@ -4,7 +4,7 @@ version: '3.2'
 
 services:
   database:
-    image: bcv-postgres:12-r1
+    image: bcv-postgres:12-r2
     container_name: database
     ports:
       - 5432:5432
@@ -34,6 +34,8 @@ services:
       - DB_USER_PASSWORD_FILE=/run/secrets/dbuser.pwfile
       - DB_NAME=mydatabase
       - DB_COLLATION=cs_CZ.utf8
+      - DB_ENCRYPT_SYMKEY_FILE=/run/secrets/enc_backup_symkey.key
+      - DB_ENCRYPT_BACKUP=false
     volumes:
       - type: bind
         source: ./postgres.pwfile
@@ -52,3 +54,7 @@ services:
 #        source: ./backup
 #        target: /var/lib/postgresql/backup
 #        read_only: false
+#      - type: bind
+#        source: ./enc_backup_symkey.pwfile
+#        target: /run/secrets/enc_backup_symkey.key
+#        read_only: true
