@@ -57,6 +57,8 @@ You can use all variables the official image supports. Plus, there are additiona
 - **DB_USER_PASSWORD_FILE** - Path to the file with a password for DB_USER.
 - **DB_NAME** - Name of the database the init script will try to create.
 - **DB_COLLATION** - Collation of the DB_NAME database.
+- **DB_ENCRYPT_SYMKEY_FILE** - Location of symmetric key for backup encryption.
+- **DB_ENCRYPT_BACKUP** - Flag that turns on/off the backup encryption. Format `true`/`false`.
 
 ### Supported collations
 Presently, image supports those collations.
@@ -67,7 +69,23 @@ Presently, image supports those collations.
 ### Backups
 Container can make a persistent backup of the database, using `pg_dump` with highest compression internally.
 To make a backup of the database, simly run `docker exec -it database /var/lib/postgresql/backup-db.sh` from outside the container.
+Ordinary, unencrypted, backup have suffix `.gz`.
 For details, see [dropin/backup-db.sh](dropin/backup-db.sh).
+
+The container can be instructed to create encrypted backups.
+See DB_ENCRYPT_SYMKEY_FILE and DB_ENCRYPT_BACKUP environment variables.
+Purpose of encrypted backups is that they can be safely shipped off-machine to another storage.
+They are protected with AES-256-CBC, with random salt and PBKDF2 key generation function.
+Encrypted backups have the suffix `.e` at the end of the file.
+After decryption, proceed the same way as you would with unencrypted backup.
+- Example encryption:
+  ```
+  openssl enc -e -aes-256-cbc -salt -pbkdf2 -pass file:/run/secrets/enc_backup_symkey.key -in mydatabase.sql.gz -out mydatabase.sql.gz.e
+  ```
+- Example decryption:
+  ```
+  openssl enc -d -aes-256-cbc -pbkdf2 -pass file:/run/secrets/enc_backup_symkey.key -in mydatabase.sql.gz.e -out mydatabase.sql.gz
+  ```
 
 ## Mounted files and volumes
 - Mandatory
